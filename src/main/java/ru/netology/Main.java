@@ -19,6 +19,32 @@ public class Main {
         return text.toString();
     }
 
+    public static void findMaxChar(BlockingQueue<String> queue, char character) throws InterruptedException {
+        int maxCount = 0;
+        ;
+        while (true) {
+            String text = queue.take();
+            if (text.equals("END")) {
+                break;
+            }
+            int count = countCharacter(text, character);
+            if (count > maxCount) {
+                maxCount = count;
+            }
+        }
+        System.out.println("Самое большое количество повторений " + character + " - " + maxCount);
+    }
+
+    private static int countCharacter(String text, char character) {
+        int count = 0;
+        for (char c : text.toCharArray()) {
+            if (c == character) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
 
         Thread generatorThread = new Thread(() -> {
@@ -44,20 +70,7 @@ public class Main {
 
         Thread threadA = new Thread(() -> {
             try {
-                int maxCountA = 0;
-                String maxTextA = "";
-                while (true) {
-                    String text = queueA.take();
-                    if (text.equals("END")) {
-                        break;
-                    }
-                    int count = countCharacter(text, 'a');
-                    if (count > maxCountA) {
-                        maxCountA = count;
-                        maxTextA = text;
-                    }
-                }
-                System.out.println("Самое большое количество повторений 'a' " + maxCountA);
+                findMaxChar(queueA, 'a');
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -65,21 +78,7 @@ public class Main {
 
         Thread threadB = new Thread(() -> {
             try {
-                int maxCountB = 0;
-                String maxTextB = "";
-                ;
-                while (true) {
-                    String text = queueB.take();
-                    if (text.equals("END")) {
-                        break;
-                    }
-                    int count = countCharacter(text, 'b');
-                    if (count > maxCountB) {
-                        maxCountB = count;
-                        maxTextB = text;
-                    }
-                }
-                System.out.println("Самое большое количество повторений 'b' " + maxCountB);
+                findMaxChar(queueB, 'b');
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -87,21 +86,7 @@ public class Main {
 
         Thread threadC = new Thread(() -> {
             try {
-                int maxCountC = 0;
-                String maxTextC = "";
-                ;
-                while (true) {
-                    String text = queueC.take();
-                    if (text.equals("END")) {
-                        break;
-                    }
-                    int count = countCharacter(text, 'c');
-                    if (count > maxCountC) {
-                        maxCountC = count;
-                        maxTextC = text;
-                    }
-                }
-                System.out.println("Самое большое количество повторений 'c' " + maxCountC);
+                findMaxChar(queueC, 'c');
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -120,16 +105,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-    private static int countCharacter(String text, char character) {
-        int count = 0;
-        for (char c : text.toCharArray()) {
-            if (c == character) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-
 }
+
+
